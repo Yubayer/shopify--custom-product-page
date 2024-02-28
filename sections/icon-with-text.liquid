@@ -1,0 +1,179 @@
+<style>
+  .iwt--{{ section.id }}{
+    margin-top: {{ section.settings.margin_top }}px;
+    margin-bottom: {{ section.settings.margin_bottom }}px;
+  }
+  .iwt__header{
+    text-align: center;
+    margin: 0 auto 32px;
+    max-width: 813px;
+  }
+  .iwt__header h2{
+    color: var(--black, #000);
+    font-size: 48px;
+    line-height: 56px; /* 116.667% */
+    margin: 0;
+  }
+
+  .iwt__container{
+    display: grid;
+    grid-template-columns: repeat(4,1fr);
+    grid-gap: 48px;
+  }
+  .iwt__item{
+    text-align: center;
+  }
+  .iwt__item img{
+    width: 60px;
+    height: 60px;
+  }
+  .iwt__item h4{
+    color: var(--black, #000);
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 26px; /* 130% */
+    margin: 12px 0 0;
+  }
+  .iwt__item p{
+    color: var(--black, #000);
+    font-size: 16px;
+    line-height: 22px; /* 137.5% */
+    margin: 0;
+  }
+  @media screen and (max-width: 768px){
+    .iwt--{{ section.id }}{
+      margin-top: {{ section.settings.margin_top-m }}px;
+      margin-bottom: {{ section.settings.margin_bottom-m }}px;
+    }
+    .iwt__header{
+      margin: 0 auto 16px;
+    }
+    .iwt__header h2{
+      font-size: 24px;
+      line-height: 30px; /* 116.667% */
+    }
+  
+    .iwt__container{
+      grid-template-columns: repeat(2,1fr);
+      grid-row-gap: 40px;
+      grid-column-gap: 60px;
+    }
+    .iwt__item img{
+      width: 32px;
+      height: 32px;
+    }
+    .iwt__item h4{
+      font-size: 14px;
+      line-height: 20px; /* 130% */
+      margin: 12px 0 6px;
+    }
+    .iwt__item p{
+      font-size: 12px;
+      line-height: 18px; /* 137.5% */
+      margin: 0;
+    }
+  }
+</style>
+<section class="iwt--{{ section.id }}">
+  <div class="iwt__wrapper page-width">
+    <div class="iwt__header">
+      <h2>{{ section.settings.title }}</h2>
+    </div>
+    <div class="iwt__container">
+      {% for block in section.blocks %}
+        <div class="iwt__item">
+            {% if block.settings.image %}
+              <img src="{{ block.settings.image | img_url: 'master' }}" alt="{{ block.settings.title }}">
+            {% endif %}
+            <h4>{{ block.settings.title }}</h4>
+            <p>{{ block.settings.text }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Icon with Text",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "QUALITY E-LIQUIDS & VAPES AT THE BEST PRICES."
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "margin_top-m",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin Top (Mobile)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom-m",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin Bottom (Mobile)",
+      "default": 16
+    }
+  ],
+  "blocks": [
+     {
+       "name": "List",
+       "type": "list",
+       "settings": [
+         {
+           "type": "image_picker",
+           "id": "image",
+           "label": "Image"
+         },
+         {
+            "type": "text",
+            "id": "title",
+            "label": "Title"
+         },
+         {
+            "type": "textarea",
+            "id": "text",
+            "label": "Text"
+         }
+       ]
+     }
+   ],
+  "presets": [
+    {
+      "name": "Icon with Text"
+    }
+  ]
+}
+{% endschema %}

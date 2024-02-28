@@ -1,0 +1,326 @@
+<style>
+  .cfr--{{ section.id }}{
+    position: relative;
+  }
+  .cfr__bg{
+    font-size: 0;
+    line-height: 0;
+  }
+  .cfr__bg img{
+    width: 100%;
+    height: 100%;
+  }
+  .cfr__wrapper{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 100%;
+  }
+  .cfr__top {
+    display: flex;
+    justify-content: space-between;
+  }
+  .cfr__top > div{
+    flex: 0 0 25%;
+  }
+  .cfr__logo img{
+    max-width: 118px;
+  }
+  .cfr__contacts{
+    margin: 16px 0;
+  }
+  .cfr__contacts .cfr__contact-item:not(:last-child){
+    margin: 0 0 18px;
+  }
+  .cfr__contact-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .cfr__contact-item span{
+    color: var(--white, #FFF);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 22px; /* 157.143% */
+  }
+  .support__title{
+    color: var(--white, #FFF);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 22px; /* 137.5% */
+    margin: 0 0 6px;
+  }
+  .support__text{
+    color: var(--white, #FFF);
+    font-size: 16px;
+    line-height: 22px; /* 137.5% */
+    margin: 0;
+  }
+  .cfr__menu a{
+    color: var(--white, #FFF);
+    font-size: 16px;
+    line-height: 22px; /* 137.5% */
+    display: block;
+    width: max-content;
+    margin: 0 0 12px;
+    text-decoration: none;
+  }
+  .cfr__newsletter h4{
+    color: var(--white, #FFF);
+    font-size: 20px;
+    line-height: 26px; /* 130% */
+    margin: 0 0 16px;
+  }
+  .cfr__newsletter input{
+    width: 100%;
+    padding: 15px 16px;
+    border: none;
+    outline: none;
+    box-shadow: none;
+    border-radius: 8px;
+    background: #1A1A1B;
+    color: #fff;
+  }
+  .cfr__newsletter input:focus{
+    border: none;
+    outline: none;
+    box-shadow: none;
+  }
+  .cfr__newsletter ::placeholder{
+    color: #969696;
+    font-size: 14px;
+    line-height: normal;
+  }
+  .cfr__newsletter button{
+    border-radius: 8px;
+    background: var(--primary, #78C043);
+    height: 36px;
+    width: 54px;
+    right: 5px;
+    top: 5px;
+  }
+  .cfr__social-icons {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin: 20px 0 0;
+  }
+  .cfr__social-icons a{
+    text-decoration: none;
+    font-size: 0;
+    line-height: 0;
+  }
+  .cfr__bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 50px 0 0;
+  }
+    .cfr__copy-text{
+    color: var(--white, #FFF);
+    font-size: 16px;
+    line-height: 22px; /* 137.5% */
+  }
+  .cfr__bg-desktop{
+    display: block;
+  }
+  .cfr__bg-mbl{
+    display: none;
+  }
+
+  @media screen and (max-width: 1024px){
+    .cfr__bg-desktop{
+      display: none;
+    }
+    .cfr__bg-mbl{
+      display: block;
+    }
+    .cfr__top {
+      flex-direction: column;
+      gap: 40px;
+    }
+    .support__title, .support__text {
+      font-size: 14px;
+    }
+    .cfr__menu a {
+      font-size: 14px;
+    }
+    .cfr__newsletter h4 {
+      margin: 0 0 16px;
+    }
+    .cfr__social-icons {
+      gap: 15px;
+      margin: 40px 0 0;
+      justify-content: center;
+    }
+    .cfr__bottom {
+      margin: 40px 0 0;
+      flex-direction: column;
+      align-items: center;
+    }
+    .cfr__copy-text {
+      font-size: 12px;
+      text-align: center;
+      margin: 0 0 18px;
+    }
+  }
+</style>
+<section class="cfr--{{ section.id }}">
+  <div class="cfr__bg">
+    {% if section.settings.bg %}
+      <img class="cfr__bg-desktop" src="{{ section.settings.bg | img_url: "master" }}" alt="{{ shop.name }}">
+    {% endif %}
+    {% if section.settings.bg__mbl %}
+      <img class="cfr__bg-mbl" src="{{ section.settings.bg__mbl | img_url: "master" }}" alt="{{ shop.name }}">
+    {% endif %}
+  </div>
+  <div class="cfr__wrapper page-width">
+    <div class="cfr__top">
+      <div class="cfr__logo">
+        {% if section.settings.logo %}
+          <img src="{{ section.settings.logo | img_url: "master" }}" alt="{{ shop.name }}">
+        {% endif %}
+        <div class="cfr__contacts">
+          {% for block in section.blocks %}
+            {% if block.type == "contact" %}
+              <div class="cfr__contact-item">
+                {{ block.settings.icon }}
+                <span>{{ block.settings.title }}</span>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+        <p class="support__title">Support Days/Hours</p>
+        <p class="support__text">{{ section.settings.time }}</p>
+      </div>
+      {% for block in section.blocks %}
+        {% if block.type == "menu" %}
+          <div class="cfr__menu">
+            {% for link in block.settings.menu.links %}
+              <a href="{{ link.url }}">{{ link.title }}</a>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endfor %}
+      <div class="cfr__newsletter">
+        <h4>Our Newsletter</h4>
+        {% render "custom-newsletter" %}
+        <div class="cfr__social-icons">
+          {% for block in section.blocks %}
+            {% if block.type == "icon" %}
+              <a href="{{ block.settings.link }}">
+                {{ block.settings.icon }}
+              </a>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <div class="cfr__bottom">
+      <div class="cfr__copy-text">
+        {{ section.settings.copy__text }}
+      </div>
+      {% if section.settings.pay %}
+        <img src="{{ section.settings.pay | img_url: "master" }}" alt="{{ shop.name }}">
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Custom Footer",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Background Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg",
+      "label": "Footer Background Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "bg__mbl",
+      "label": "Footer Background Image(Mobile)"
+    },
+    {
+      "type": "header",
+      "content": "Footer Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Footer Logo"
+    },
+    {
+      "type": "text",
+      "id": "time",
+      "label": "Supporting Time",
+      "default": "Monday -Friday 9.00 - 17.00"
+    },
+    {
+      "type": "textarea",
+      "id": "copy__text",
+      "label": "Copy Right Text",
+      "default": "© 2023 all rights reserved   l   2023 CBD Joint London"
+    },
+    {
+      "type": "image_picker",
+      "id": "pay",
+      "label": "Payment Method Image"
+    }
+  ],
+  "blocks": [
+     {
+       "name": "Menu",
+       "type": "menu",
+       "settings": [
+          {
+            "type": "link_list",
+            "id": "menu",
+            "label": "Menu"
+          }
+       ]
+     },
+     {
+       "name": "Icon",
+       "type": "icon",
+       "settings": [
+          {
+            "type": "url",
+            "id": "link",
+            "label": "Social Media link"
+          },
+          {
+            "type": "html",
+            "id": "icon",
+            "label": "Social Media Icon"
+          }
+       ]
+     },
+     {
+       "name": "Contact",
+       "type": "contact",
+       "settings": [
+          {
+            "type": "html",
+            "id": "icon",
+            "label": "Contact Icon"
+          },
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Contact Text"
+          }
+       ]
+     }
+   ],
+  "presets": [
+    {
+      "name": "Custom Footer"
+    }
+  ]
+}
+{% endschema %}

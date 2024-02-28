@@ -1,0 +1,111 @@
+<style>
+  .cmb--{{ section.id }}{
+    margin-top: {{ section.settings.margin_top }}px;
+    margin-bottom: {{ section.settings.margin_bottom }}px;
+  }
+  .cmb__header{
+    margin: 0 0 24px;
+  }
+  .cmb__header h2{
+    color: var(--black, #000);
+    font-size: 48px;
+    line-height: 56px; /* 116.667% */
+    margin: 0;
+  }
+  .cmb__container{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    grid-gap: 24px;
+  }
+  .cmb__container a{
+    display: block;
+    text-decoration: none;
+  }
+  @media screen and (max-width: 1024px){
+    .cmb__container{
+      grid-template-columns: repeat(2,1fr);
+    }
+  }
+  @media screen and (max-width: 768px){
+    .cmb--{{ section.id }}{
+      margin-top: {{ section.settings.margin_top-m }}px;
+      margin-bottom: {{ section.settings.margin_bottom-m }}px;
+    }
+    .cmb__header h2{
+      font-size: 24px;
+      line-height: 30px; /* 116.667% */
+    }
+    .cmb__container{
+      grid-template-columns: 1fr;;
+    }
+
+  }
+</style>
+<section class="cmb--{{ section.id }}">
+  <div class="cmb__wrapper page-width">
+    <div class="cmb__header">
+      <h2 class="{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--fade-in{% endif %}">{{ blog.title }}</h2>
+    </div>
+    <div class="cmb__container">
+      {% for article in blog.articles %}
+        {% render 'custom-article-card', article: article %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Custom Main Blog",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+        "type": "range",
+        "id": "margin_top",
+        "min": 0,
+        "max": 200,
+        "step": 4,
+        "unit": "px",
+        "label": "Margin Top",
+        "default": 16
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom",
+        "min": 0,
+        "max": 200,
+        "step": 4,
+        "unit": "px",
+        "label": "Margin Bottom",
+        "default": 16
+      },
+      {
+        "type": "range",
+        "id": "margin_top-m",
+        "min": 0,
+        "max": 200,
+        "step": 4,
+        "unit": "px",
+        "label": "Margin Top (Mobile)",
+        "default": 16
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom-m",
+        "min": 0,
+        "max": 200,
+        "step": 4,
+        "unit": "px",
+        "label": "Margin Bottom (Mobile)",
+        "default": 16
+      }
+  ],
+  "presets": [
+    {
+      "name": "Custom Main Blog"
+    }
+  ]
+}
+{% endschema %}

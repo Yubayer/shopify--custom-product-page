@@ -1,0 +1,233 @@
+<style>
+  .related__articles--{{ section.id }}{
+    margin-top: {{ section.settings.margin_top }}px;
+    margin-bottom: {{ section.settings.margin_bottom }}px;
+  }
+  .related__article-header{
+    margin: 0 0 32px;
+  }
+  .related__article-header h2{
+    color: var(--black, #000);
+    font-size: 48px;
+    line-height: 56px; /* 116.667% */
+  }
+  .related__article-container{
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    grid-gap: 60px;
+  }
+  .related__article-container a{
+    display: block;
+    text-decoration: none;
+  }
+  .ra__card {
+    display: grid;
+    grid-template-columns: 210px 1fr;
+    grid-gap: 16px;
+  }
+  .ra__card-left{
+    font-size: 0;
+    line-height: 0;
+  }
+  .ra__card-left img{
+    border-radius: 12px 0px 0px 12px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .ra__card-title{
+    color: var(--black, #000);
+    font-family: Space Grotesk;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 24px; /* 133.333% */
+    margin: 0 0 12px;
+  }
+  .ra__card__author__date{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .ra__card__author{
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .ra__card__author__name{
+    color: var(--black, #000);
+    font-family: Gotham;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px; /* 157.143% */
+  }
+  .ra__card__author img{
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+  .ra__card__date{
+    color: var(--black, #000);
+    font-family: Gotham;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px; /* 183.333% */
+  }
+
+  @media screen and (max-width: 990px){
+    .related__articles--{{ section.id }}{
+      margin-top: {{ section.settings.margin_top-m }}px;
+      margin-bottom: {{ section.settings.margin_bottom-m }}px;
+    }
+    .related__article-header{
+      margin: 0 0 12px;
+    }
+    .related__article-header h2{
+      font-size: 24px;
+      line-height: 30px; /* 116.667% */
+    }
+    .related__article-container{
+      grid-template-columns: 1fr;
+      grid-gap: 24px;
+    }
+    .ra__card {
+      grid-template-columns: 110px 1fr;
+      grid-gap: 16px;
+    }
+    .ra__card-title {
+      font-size: 14px;
+      line-height: 20px;
+    }
+    .ra__card__author__name {
+      font-size: 12px;
+    }
+    .ra__card__date {
+      font-size: 10px;
+   }
+  }
+</style>
+<section class="related__articles--{{ section.id }}">
+  <div class="related__article-wrapper page-width">
+    <div class="related__article-header">
+      <h2>{{ section.settings.title }}</h2>
+    </div>
+    <div class="related__article-container">
+      {% assign current_article = article %}
+      {% assign current_title = current_article.title %}
+      {% assign current_author = current_article.author %}
+      {% assign current_description = current_article.description | split: ' ' | uniq %}
+      
+      {% assign threshold = 0.5 %}
+      
+      {% for article in blog.articles %}
+        {% if article.id != current_article.id %}
+      
+          {% assign article_title = article.title %}
+          {% assign article_author = article.author %}
+          {% assign article_description = article.description | split: ' ' | uniq %}
+      
+          {% assign intersection = current_description | concat: article_description | uniq | size %}
+          {% assign union = current_description | size | plus: article_description | size | minus: intersection %}
+      
+          {% assign jaccard_index = intersection | divided_by: union | times: 100 %}
+      
+          {% if current_title == article_title or current_author == article_author or jaccard_index >= threshold %}
+            <a href="{{ article.url }}">
+              <div class="ra__card">
+                <div class="ra__card-left">
+                  {% if article.image %}
+                    <img src="{{ article.image | img_url: "master" }}" alt="{{ article.title }}">
+                  {% endif %}
+                </div>
+                <div class="ra__card-right">
+                  <div class="ra__card-title">
+                    {{ article.title }}
+                  </div>
+                  <div class="ra__card__author__date">
+                    <div class="ra__card__author">
+                      {% if article.user.image %}
+                        <img src="{{ article.user.image | img_url: 'master' }}" alt="{{ article.author }}">
+                      {% endif %}
+                      <div class="ra__card__author__name">
+                        {{ article.author }}
+                      </div>
+                    </div>
+                    <div class="ra__card__date">
+                      {{ article.published_at | time_tag: format: 'date' }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </a>
+          {% endif %}
+      
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Related Articles",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "margin_top-m",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin Top (Mobile)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom-m",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin Bottom (Mobile)",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Related Articles"
+    }
+  ]
+}
+{% endschema %}

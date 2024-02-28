@@ -1,0 +1,104 @@
+.cart__items-custom .back__top-shop{
+  display: inline-flex;
+  align-items: center;
+  color: var(--text, #1A1A1B);
+  font-size: 12.228px;
+  line-height: normal;
+  text-decoration: none;
+}
+.cart__items-custom .title-wrapper-with-link{
+  margin-top: 7px;
+  margin-bottom: 44px;
+}
+.cart__items-custom .title-wrapper-with-link h1{
+  color: var(--black, #000);
+  font-size: 48px;
+  line-height: 56px; /* 116.667% */
+}
+.cart__items-custom .cart-items th{
+  color: var(--text, #1A1A1B);
+  font-family: Space Grotesk;
+  font-size: 20px;
+  line-height: 26px; /* 130% */
+  border: none;
+}
+
+.cart__items-custom .cart__items{
+  border: none;
+}
+.cart__items-custom .cart-items tbody tr{
+  position: relative;
+}
+.cart__items-custom .cart-items tbody tr:after{
+  content: "";
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: #e2e2e2;
+}
+.cart__items-custom .cart-item__details>* {
+  max-width: 38rem;
+}
+.cart__items-custom tbody .cart-item__details .cart-item__name{
+  color: #000;
+  font-family: Space Grotesk;
+  font-size: 24px;
+  line-height: 53.983px; /* 224.93% */
+}
+.cart__items-custom tbody .cart-item__details .cart-item__name {
+  color: #000;
+  font-family: Space Grotesk;
+  font-size: 24px;
+  line-height: 36.983px;
+}
+.cart__items-custom .product-option{
+  font-family: Space Grotesk;
+  font-size: 16px;
+}
+.cart__items-custom .quantity.cart-quantity{
+  border-radius: 8px;
+  background: #F9F9F9;
+}
+.cart__items-custom .quantity.cart-quantity:after, .cart__items-custom .quantity.cart-quantity:before{
+  content: none;
+}
+.cart__items-custom .cart-item__price-wrapper .price{
+  color: var(--black, #000);
+  font-family: Gotham;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+
+
+@media screen and (max-width: 749px){
+  .cart__items-custom .back__top-shop {
+    font-size: 10px;
+  }
+  .cart__items-custom .title-wrapper-with-link {
+    margin-top: 5px;
+    margin-bottom: 16px;
+  }
+  .cart__items-custom .title-wrapper-with-link h1 {
+    font-size: 24px;
+    line-height: 30px;
+  }
+  .cart__items-custom .cart-items th {
+    font-size: 14px;
+    line-height: 18px;
+  }
+  .cart__items-custom tbody .cart-item__details .cart-item__name {
+    font-size: 12px;
+    line-height: 21px;
+  }
+  .cart__items-custom .product-option {
+    font-size: 12px;
+  }
+  .cart__items-custom .cart-item__price-wrapper .price {
+    font-size: 14px;
+  }
+}

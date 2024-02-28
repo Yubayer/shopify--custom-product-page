@@ -1,0 +1,25 @@
+<nav class="header__inline-menu">
+  <ul class="parent">
+  {% for link in section.settings.menu.links %}
+  <li class="{% if link.active %}active {% if link.child_active %}child-active{% endif %}{% endif %}"><a href="{{ link.url }}">{{ link.title }}</a>
+  {% if link.links != blank %}
+    <div class="megamenu__container">
+       <ul class="child page-width">
+        {% for child_link in link.links %}  
+        <li class="{% if child_link.active %}active {% if child_link.child_active %}child-active{% endif %}{% endif %}"><a href= "{{ child_link.url }}">{{ child_link.title }}</a>
+        {% if child_link.links != blank %}
+          <ul class="grandchild">
+          {% for grandchild_link in child_link.links %}  
+            <li class="{% if grandchild_link.active %}active {% if grandchild_link.child_active %}child-active{% endif %}{% endif %}"><a href= "{{ grandchild_link.url }}">{{ grandchild_link.title }}</a></li>
+          {% endfor %}
+          </ul>
+        {% endif %}   
+        </li>
+        {% endfor %}
+      </ul> 
+    </div>
+  {% endif %} 
+  </li>
+  {% endfor %}
+  </ul>
+</nav>

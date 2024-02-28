@@ -1,0 +1,144 @@
+<style>
+  .cbp--{{ section.id }}{
+    margin-top: {{ section.settings.margin_top }}px;
+    margin-bottom: {{ section.settings.margin_bottom }}px;
+  }
+ .cbp__header{
+    text-align: left;
+    margin: 0 auto 32px;
+  }
+  .cbp__header h2{
+    color: var(--black, #000);
+    font-size: 48px;
+    line-height: 56px; /* 116.667% */
+    margin: 0;
+  }
+  .cbp__container{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    grid-gap: 24px;
+  }
+  .cbp__container a{
+    display: block;
+    text-decoration: none;
+  }
+  @media screen and (max-width: 990px){
+    .cbp--{{ section.id }}{
+      margin-top: {{ section.settings.margin_top-m }}px;
+      margin-bottom: {{ section.settings.margin_bottom-m }}px;
+    }
+    .cbp__header{
+      text-align: center;
+      margin: 0 auto 16px;
+    }
+    .cbp__header h2{
+      font-size: 24px;
+      line-height: 30px; /* 116.667% */
+    }
+    .cbp__container{
+      display: grid;
+      grid-gap: 24px;
+      grid-auto-flow: column;
+      grid-auto-columns: 330px;
+      overflow-x: scroll;
+    }
+    .cbp__item{
+      min-width: 330px;
+    }
+
+  }
+</style>
+<section class="cbp--{{ section.id }}">
+  <div class="cbp__wrapper page-width">
+    <div class="cbp__header">
+      <h2>{{ section.settings.title }}</h2>
+    </div>
+    {%- assign blog = blogs[section.settings.blog] -%}
+    <div class="cbp__container">
+      {% if blog.articles.size > 0 %}
+        {% for article in blog.articles %}
+          {% render 'custom-article-card', article: article %}
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+</section>
+{% schema %}
+{
+  "name": "Custom Blog Posts",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "header",
+      "content": "Blog Posts"
+    },
+    {
+      "id": "blog",
+      "type": "blog",
+      "label": "Blog"
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "label": "Posts to show",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+        "type": "range",
+        "id": "margin_top",
+        "min": 0,
+        "max": 200,
+        "step": 4,
+        "unit": "px",
+        "label": "Margin Top",
+        "default": 16
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom",
+        "min": 0,
+        "max": 200,
+        "step": 4,
+        "unit": "px",
+        "label": "Margin Bottom",
+        "default": 16
+      },
+      {
+        "type": "range",
+        "id": "margin_top-m",
+        "min": 0,
+        "max": 200,
+        "step": 4,
+        "unit": "px",
+        "label": "Margin Top (Mobile)",
+        "default": 16
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom-m",
+        "min": 0,
+        "max": 200,
+        "step": 4,
+        "unit": "px",
+        "label": "Margin Bottom (Mobile)",
+        "default": 16
+      }
+  ],
+  "presets": [
+    {
+      "name": "Custom Blog Posts"
+    }
+  ]
+}
+{% endschema %}

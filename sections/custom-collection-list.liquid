@@ -1,0 +1,195 @@
+<style>
+  .ccl--{{ section.id }}{
+    margin-top: {{ section.settings.margin_top }}px;
+    margin-bottom: {{ section.settings.margin_bottom }}px;
+  }
+
+  .ccl__wrapper a{
+    display: block;
+    text-decoration: none;
+  }
+  .ccl__item-img{
+    font-size: 0;
+    line-height: 0;
+  }
+  .ccl__item-img img{
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+  }
+  .ccl__item h4{
+    color: var(--black, #000);
+    font-size: 20px;
+    line-height: 26px;
+    margin: 16px 0 6px;
+  }
+  .ccl__item p{
+    color: var(--gray, #323232);
+    font-size: 16px;
+    line-height: 22px; /* 137.5% */
+    margin: 0 0 16px;
+  }
+  .ccl__btn{
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .ccl__btn-text{
+    color: var(--primary, #78C043);
+    font-size: 16px;
+    line-height: 22px; /* 137.5% */
+  }
+  .ccl__btn-icon{
+    font-size: 0;
+    line-height: 0;
+  }
+
+  @media screen and (min-width: 990px){
+    .ccl__wrapper{
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      grid-gap: 16px;
+    }
+  }
+  @media screen and (max-width: 990px){
+    .ccl--{{ section.id }}{
+      margin-top: {{ section.settings.margin_top-m }}px;
+      margin-bottom: {{ section.settings.margin_bottom-m }}px;
+    }
+    .ccl__wrapper{
+      display: flex;
+      justify-content: space-between;
+      overflow-x: auto;
+      padding-bottom: 24px;
+      gap: 24px;
+    }
+    .ccl__wrapper a{
+      min-width: 310px;
+    }
+    .ccl__item-img img{
+      width: 100%;
+      height: 100%;
+      border-radius: 12px;
+    }
+    .ccl__item h4{
+      font-size: 14px;
+      margin: 12px 0 0;
+    }
+    .ccl__item p{
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 18px; /* 137.5% */
+      margin: 0 0 12px;
+    }
+    .ccl__btn{
+      gap: 8px;
+    }
+    .ccl__btn-text{
+      font-size: 14px;
+    }
+  }
+</style>
+<section class="ccl--{{ section.id }}">
+  <div class="ccl__wrapper page-width">
+    {% for block in section.blocks %}
+      <a href="{{ block.settings.collection.url }}">
+        <div class="ccl__item">
+          <div class="ccl__item-img">
+            {% if block.settings.image %}
+              <img src="{{ block.settings.image | img_url: "master" }}" alt="{{ block.settings.collection.title }}">
+            {% endif %}
+          </div>
+          <h4>{{ block.settings.collection.title }}</h4>
+          <p>
+            {% if block.settings.text != blank %}
+              {{ block.settings.text }}
+            {% elsif block.settings.collection.description != blank %}
+              {{ block.settings.collection.description }}
+            {% endif %}
+          </p>
+          <span class="ccl__btn"><span class="ccl__btn-text">SHOP NOW</span><span class="ccl__btn-icon">{% render "all-icons", name: "ccl__btn" %}</span></span>
+        </div>
+      </a>
+    {% endfor %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Custom Collection List",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "margin_top-m",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin Top (Mobile)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom-m",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin Bottom (Mobile)",
+      "default": 16
+    }
+  ],
+  "blocks": [
+     {
+       "name": "Collection",
+       "type": "collection",
+       "settings": [
+         {
+            "type": "collection",
+            "id": "collection",
+            "label": "Collection"
+         },
+         {
+           "type": "image_picker",
+           "id": "image",
+           "label": "Image"
+         },
+         {
+           "type": "textarea",
+           "id": "text",
+           "label": "Collection Description"
+         }
+       ]
+     }
+   ],
+  "presets": [
+    {
+      "name": "Custom Collection List"
+    }
+  ]
+}
+{% endschema %}

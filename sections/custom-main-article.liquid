@@ -1,0 +1,245 @@
+<style>
+  .mac--{{ section.id }}{
+    margin-top: {{ section.settings.margin_top }}px;
+    margin-bottom: {{ section.settings.margin_bottom }}px;
+  }
+  .mac__header{
+    display: flex;
+    gap: 50px;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 35px;
+  }
+  .mac__title{
+    color: var(--black, #000);
+    font-family: Space Grotesk;
+    font-size: 40px;
+    line-height: 48px;
+    /* margin: auto; */
+    max-width: 995px;
+  }
+  .mac__share{
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .mac__share > div{
+    font-size: 0;
+    line-height: 0;
+    cursor: pointer;
+  }
+  .article__copy{
+    position: relative;
+  }
+  #message{
+    font-size: 12px;
+    position: absolute;
+    top: 120%;
+    left: -10px;
+  }
+  .mac__featured-image{
+    font-size: 0;
+    line-height: 0;
+  }
+  .mac__featured-image img{
+    width: 100%;
+    height: 100%;
+  }
+  .mac__author-date{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 32px 0;
+  }
+  .mac__author{
+    color: var(--black, #000);
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 32px; /* 133.333% */
+  }
+  .mac__date{
+    color: var(--black, #000);
+    font-family: Gotham;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 16px; /* 88.889% */
+  }
+  @media screen and (max-width: 768px){
+    .mac--{{ section.id }}{
+      margin-top: {{ section.settings.margin_top-m }}px;
+      margin-bottom: {{ section.settings.margin_bottom-m }}px;
+    }
+    .mac__header {
+      gap: 16px;
+      justify-content: center;
+      margin: 0 0 25px;
+      flex-direction: column;
+    }
+    .mac__title {
+      font-size: 16px;
+      line-height: 22px;
+      text-align: center;
+    }
+    .mac__share{
+      gap: 12px;
+    }
+    .mac__share > div svg{
+      width: 21px;
+      height: 21px;
+    }
+    .mac__author-date {
+      margin: 16px 0;
+    }
+    .mac__author {
+      font-size: 14px;
+      line-height: 22px;
+    }
+    .mac__date {
+      font-size: 12px;
+    }
+  }
+</style>
+<section class="mac--{{ section.id }}">
+  <div class="mac__wrapper page-width">
+    <div class="mac__header">
+      <div class="mac__title">
+        {{ article.title | escape }}
+      </div>
+      <div class="mac__share">
+          <div class="article-share-item social-share twitter">
+            {% render "all-icons", name: "twitter" %}
+          </div>
+          <div class="article-share-item social-share facebook">
+            {% render "all-icons", name: "facebook" %}
+          </div>
+          <div class="article__copy">
+            <div id="copyButton" class="article__copy-btn">
+              {% render "all-icons", name: "link__copy" %}
+            </div>
+            <div id="message"></div>
+          </div>
+      </div>
+    </div>
+    <div class="mac__container">
+      <div class="mac__featured-image">
+        {% if article.image %}
+          <img src="{{ article.image | img_url: "master" }}" alt="{{ article.title }}">
+        {% endif %}
+      </div>
+      <div class="mac__author-date">
+        <div class="mac__author">
+          {{ article.author }}
+        </div>
+        <div class="mac__date">
+          {{ article.published_at | time_tag: format: 'date' }}
+        </div>
+      </div>
+      <div class="mac__content">
+        {{ article.content }}
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+  setShareLinks();
+  
+  function socialWindow(url) {
+  var left = (screen.width -570) / 2;
+  var top = (screen.height -570) / 2;
+  var params = "menubar=no,toolbar=no,status=no,width=570,height=570,top=" + top + ",left=" + left;  window.open(url,"NewWindow",params);}
+  
+  function setShareLinks() {
+      var pageUrl = encodeURIComponent(document.URL);
+      var tweet = encodeURIComponent($("meta[property='og:description']").attr("content"));
+  
+
+      $(".social-share.twitter").on("click", function() {
+      url = "https://twitter.com/intent/tweet?url=" + pageUrl + "&text=" + tweet;
+      socialWindow(url);
+      });
+
+    
+      $(".social-share.facebook").on("click", function() { 
+        url = "https://www.facebook.com/sharer/sharer.php?u=" + pageUrl;
+        socialWindow(url);
+      });
+      
+  }
+</script>
+
+  <script>
+  document.getElementById('copyButton').addEventListener('click', function() {
+      var currentURL = window.location.href;
+
+      var tempInput = document.createElement('input');
+      tempInput.value = currentURL;
+      document.body.appendChild(tempInput);
+
+      tempInput.select();
+      tempInput.setSelectionRange(0, 99999); 
+
+      document.execCommand('copy');
+
+      document.body.removeChild(tempInput);
+
+      var messageDiv = document.getElementById('message');
+      messageDiv.textContent = 'Copied';
+    });
+  </script>
+{% schema %}
+{
+  "name": "Main Article(Custom)",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "margin_top-m",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin Top (Mobile)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom-m",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin Bottom (Mobile)",
+      "default": 16
+    }
+  ],
+  "presets": [
+    {
+      "name": "Main Article(Custom)"
+    }
+  ]
+}
+{% endschema %}

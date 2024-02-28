@@ -1,0 +1,163 @@
+<style>
+  .bsl--{{ section.id }}{
+    margin-top: {{ section.settings.margin_top }}px;
+    margin-bottom: {{ section.settings.margin_bottom }}px;
+    overflow: hidden;
+  }
+ .bsl__header{
+    text-align: center;
+    margin: 0 auto 32px;
+  }
+  .bsl__header h2{
+    color: var(--black, #000);
+    font-size: 48px;
+    line-height: 56px; /* 116.667% */
+    margin: 0;
+  }
+  .bsl__container--{{ section.id }} .swiper{
+    width: 80%;
+    overflow: visible;
+    margin: auto;
+  }
+  .bsl__container--{{ section.id }} .swiper-wrapper{
+    align-items: center;
+  }
+  .bsl__container--{{ section.id }} .swiper-slide img{
+    max-width: 100%;
+  }
+  @media screen and (max-width: 768px){
+    .bsl--{{ section.id }}{
+      margin-top: {{ section.settings.margin_top-m }}px;
+      margin-bottom: {{ section.settings.margin_bottom-m }}px;
+    }
+    .bsl__header{
+      margin: 0 auto 16px;
+    }
+    .bsl__header h2{
+      font-size: 24px;
+      line-height: 30px; /* 116.667% */
+    }
+    .bsl__container--{{ section.id }} .swiper-slide img{
+      max-width: 100%;
+    }
+  }
+</style>
+<section class="bsl--{{ section.id }}">
+  <div class="bsl__wrapper">
+    <div class="bsl__header">
+      <h2>{{ section.settings.title }}</h2>
+    </div>
+    <div class="bsl__container--{{ section.id }}">
+      <div class="swiper">
+        <div class="swiper-wrapper">
+          {% for block in section.blocks %}
+            <div class="swiper-slide">
+              {% if block.settings.image %}
+                <img src="{{ block.settings.image | img_url: "master" }}" alt="Brand Item">
+              {% endif %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  new Swiper(".bsl__container--{{ section.id }} .swiper", {
+    slidesPerView: 2,
+    spaceBetween: 30,
+    centeredSlides: true,
+    loop: true,
+    breakpoints: {
+      480: {
+        slidesPerView: 3,
+        spaceBetween: 30,
+      },
+      768: {
+        slidesPerView: 3,
+        spaceBetween: 30,
+      },
+      1020: {
+        slidesPerView: 5,
+        spaceBetween: 60,
+      }
+    },
+  })
+</script>
+
+
+{% schema %}
+{
+  "name": "Brands Slider",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "margin_top-m",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin Top (Mobile)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom-m",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin Bottom (Mobile)",
+      "default": 16
+    }
+  ],
+  "blocks": [
+     {
+       "name": "Brand",
+       "type": "brand",
+       "settings": [
+         {
+           "type": "image_picker",
+           "id": "image",
+           "label": "Image"
+         }
+       ]
+     }
+   ],
+  "presets": [
+    {
+      "name": "Brands Slider"
+    }
+  ]
+}
+{% endschema %}

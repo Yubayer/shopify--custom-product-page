@@ -1,0 +1,417 @@
+
+{{ 'new-product.css' | asset_url | stylesheet_tag }}
+
+<div class="np-section">
+  <div class="np-container page-width">
+    <div class="np-content-wrapper">
+      <div class="np-media-wrapper">
+        <np-media data-src="{{ product.selected_or_first_available_variant.featured_image.src | image_url }}">
+          <div class="mpSliderWrapper">
+            <div class="swiper mpThumbSwiepr">
+              <div class="swiper-wrapper">
+                {% for media in product.media %}
+                  <div class="swiper-slide np-swiper-slide" data-src="{{ media.preview_image | image_url }}" data-index="{{ forloop.index0 }}">
+                    <div class="np-ts-image-wrapper" onmouseleave="zoomOut(event)" onmousemove="zoom(event)" data-src="{{ media.preview_image | image_url:  width: 1920 }}">
+                      {{ media.preview_image | image_url: width: 600, crop: 'top' | image_tag: loading: 'lazy', class: 'np-thumb-image' }}
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+              <div class="swiper-pagination np-ts-pagimation"></div>
+            </div>
+            <div class="swiper mpScrollSwiper">
+              <div class="swiper-wrapper">
+                 {% for media in product.media %}
+                  <div class="swiper-slide np-scroll-swiper">
+                    {{ media.preview_image | image_url: width: 100, crop: 'top' | image_tag: loading: 'lazy', class: 'np-scroll-image' }}
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </np-media>
+        <div class="np-tabs-wrapper np-tab-desktop">
+          {% for block in section.blocks %}
+            {% case block.type %}
+              {% when 'tab' %}
+                <div class="np-tab-item {% if block.settings.block_mb %}np-mb{% endif %}" data-index="{{ forloop.index }}">
+                  <h3>{{ block.settings.heading }}</h3>
+                  <button>
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M5.80849 6.29437V0.610448H7.85029V6.29437H13.5894V8.28098H7.85029V13.9649H5.80849V8.28098H0.0693879V6.29437H5.80849Z" fill="black"/>
+                    </svg>
+                  </button>
+                </div>
+                <div class="np-tab-content" data-index="{{ forloop.index }}">
+                  <div class="np-tab-inner">
+                    <button class='np-tab-close'>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">
+                        <path d="M21.0003 20.7982L1.20215 1" stroke="white" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M20.7982 1.2019L1 21.0001" stroke="white" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                    {% if block.settings.description %}
+                    {{ product.description }}
+                    {% endif %}
+                    {% unless block.settings.richtext == blank %}
+                      {{ block.settings.richtext }}
+                    {% endunless %}
+                    {{ block.settings.page.content }}
+                  </div>
+                </div>
+                <div class="back-shadow"></div>
+            {% endcase %}
+          {% endfor %}
+        </div>
+      </div>
+      <div class="np-info-wrapper">
+        {% for block in section.blocks %}
+          {% case block.type %}
+            {% when '@app' %}
+              {% render block %}
+            {% when 'title' %}
+              <div class="np-title-wrapper {% if block.settings.block_mb %}np-mb{% endif %}">
+                <h2 class="np-title">{{ product.title }}</h2>
+              </div>
+            {% when 'short-description' %}
+              {% unless product.metafields.custom.short_description == blank %}
+                <div class="np-short-desc-wrapper {% if block.settings.block_mb %}np-mb{% endif %}">
+                  <p class="np-short-desc" style="color: {{ block.settings.color }}">{{ product.metafields.custom.short_description }}</p>
+                </div>
+              {% endunless %}
+            {% when 'price' %}
+              <div class="np-price-wrapper {% if block.settings.block_mb %}np-mb{% endif %}">
+                {% if product.selected_or_first_available_variant.price < product.selected_or_first_available_variant.compare_at_price %}
+                  <h3 class="np-regular-price">{{ product.selected_or_first_available_variant.price | money }}</h3>
+                  <h3 class="np-compare-price">{{ product.selected_or_first_available_variant.compare_at_price | money }}</h3>  
+                {% else %}
+                  <h3 class="np-regular-price">{{ product.selected_or_first_available_variant.price | money }}</h3>
+                {% endif %}
+              </div>
+            {% when 'product-form' %}
+              <div class="np-form-wrapper {% if block.settings.block_mb %}np-mb{% endif %}">
+                {% form 'product', product, class: 'npForm' %}
+                  <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                  <np-quantity>
+                    <div class="np-qty-wrapper">
+                      <button data-type="minus" type="button" class="npf-qty-minus">-</button>
+                      <input class="npf-qty-input" name="quantity" type="text" id="quantity" value="{{ product.selected_or_first_available_variant.quantity_rule.min }}">
+                      <button data-type="plus" type="button" class="npf-qty-plus">+</button>
+                    </div>
+                  </np-quantity>
+                  <div class="npf-submit-wrapper">
+                    <button class="npf-submit" {% unless product.selected_or_first_available_variant.available %}disabled{% endunless %}>
+                      {% if product.selected_or_first_available_variant.available %}
+                        Add to Cart
+                      {% else %}
+                        Sold Out
+                      {% endif %}
+                    </button>
+                  </div>
+                {% endform %}
+              </div>
+            {% when 'product-variants' %}
+              {% unless product.has_only_default_variant %}
+              {% assign xType = block.settings.option | strip_newlines | strip | downcase | split: ',' %}
+                <np-variants
+                  id="variant-radios-{{ section.id }}"
+                  data-section="{{ section.id }}"
+                  data-url="{{ product.url }}"
+                  {{ block.shopify_attributes }}>
+                  <form class="{% if block.settings.block_mb %}np-mb{% endif %}">
+                    <div classs="np-variants-wrapper">
+                      {% for option in product.options_with_values %}
+                        {% assign optionName = option.name | downcase | strip %}
+                          {% if xType contains optionName  %}
+                            <div class="np-variant-select-wrapper npvo-item">
+                              <select class="variant-option-input" name="{{ option.name }}" data-index="{{ forloop.index }}">
+                                <option {% unless product.selected_variant %}selected{% endunless %}>{{ option.name }}</option>
+                                {% for value in option.values %}
+                                  <option {% if product.selected_variant %} {% if option.selected_value == value %}selected{% endif %}{% endif %} value="{{ value }}">{{ value }}</option>
+                                {% endfor %}
+                              </select>
+                            </div>
+                          {% else %}
+                            <div class="np-variant-button-wrapper npvo-item">
+                              <h3 class="np-variant-option-name">{{ option.name }}</h3>
+                              <div class="np-variant-options">
+                                {% assign prevIndex = forloop.index %}
+                                {% for value in option.values %}
+                                  <input class="variant-option-input" {% if option.selected_value == value %}checked{% endif %} type="radio" id="{{forloop.index}}-{{ option.name | replace: ' ', '-' }}" value="{{ value }}" name="{{ option.name }}" data-index="{{ prevIndex }}">
+                                  <label class="variant-option-label" for="{{forloop.index}}-{{ option.name | replace: ' ', '-' }}">{{ value }}</label>
+                                {% endfor %}
+                              </div>
+                            </div>
+                          {% endif %}
+                       
+                      {% endfor %}
+                    </div>
+                  </form>
+                </np-variants>
+              {% endunless %}
+            {% when 'description' %}
+              <div class="np-description-wrapper {% if block.settings.block_mb %}np-mb{% endif %}">
+                {{ product.description }}
+              </div>
+            {% when 'icon' %}
+              <div class="np-icons-wrapper {% if block.settings.block_mb %}np-mb{% endif %}">
+                <div class="np-icons-bottom-wrapper">
+                  <div class="np-icons-bottom-item">
+                    {% unless block.settings.image == blank %}
+                      {{ block.settings.image | image_url: width: 50 | image_tag }}
+                    {% endunless %}
+                    <p>{{ block.settings.text }}</p>
+                  </div>
+                </div>
+              </div>
+            {% when 'tab' %}
+              <div class="np-tabs-wrapper np-tab-mobile">
+                <div class="np-tab-item {% if block.settings.block_mb %}np-mb{% endif %}" data-index="{{ forloop.index }}">
+                  <h3>{{ block.settings.heading }}</h3>
+                  <button>
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M5.80849 6.29437V0.610448H7.85029V6.29437H13.5894V8.28098H7.85029V13.9649H5.80849V8.28098H0.0693879V6.29437H5.80849Z" fill="black"/>
+                    </svg>
+                  </button>
+                </div>
+                <div class="np-tab-content" data-index="{{ forloop.index }}">
+                  <div class="np-tab-inner">
+                    <button class='np-tab-close'>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 22 22" fill="none">
+                        <path d="M21.0003 20.7982L1.20215 1" stroke="white" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M20.7982 1.2019L1 21.0001" stroke="white" stroke-width="2" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                    </button>
+                    {% if block.settings.description %}
+                    {{ product.description }}
+                    {% endif %}
+                    {% unless block.settings.richtext == blank %}
+                      {{ block.settings.richtext }}
+                    {% endunless %}
+                    {{ block.settings.page.content }}
+                  </div>
+                </div>
+                <div class="back-shadow"></div>
+              </div>
+          {% endcase %}
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="application/json-product">{{ product | json }}</script>
+
+
+<script>
+   function zoom(e){
+    var zoomer = e.currentTarget;
+    var src = zoomer.dataset.src
+    e.offsetX ? offsetX = e.offsetX : offsetX = e.touches[0].pageX
+    e.offsetY ? offsetY = e.offsetY : offsetX = e.touches[0].pageX
+    x = offsetX/zoomer.offsetWidth*100
+    y = offsetY/zoomer.offsetHeight*100
+    zoomer.style.backgroundImage = `url(${src})`
+    zoomer.style.backgroundPosition = x + '% ' + y + '%';
+    zoomer.style.backgroundSize = '200% 200%'
+  }
+
+  function zoomOut(e) {
+    var zoomer = e.currentTarget;
+    var src = zoomer.dataset.src
+    zoomer.style.backgroundImage = 'inherit'
+    zoomer.style.backgroundPosition = 'inherit'
+  }
+
+  let tabItems = document.querySelectorAll(".np-tab-item")
+  let tabContents = document.querySelectorAll(".np-tab-content")
+  let shadowEl = document.querySelector(".back-shadow")
+  
+  tabItems.forEach(item => item.addEventListener("click", e => {
+    tabContents.forEach(content => {
+      if(item.dataset.index === content.dataset.index){
+        content.classList.add("active-np-tab")
+        shadowEl.classList.add("active-back-shadow")
+        document.querySelector("body").style.overflow = 'hidden'
+        document.querySelectorAll(".swiper").forEach(s => s.style.visibility = 'hidden')
+      } else {
+        content.classList.remove("active-np-tab")
+      }
+    })
+  }))
+
+  shadowEl.addEventListener("click", e => {
+    tabContents.forEach(content => {
+      content.classList.remove("active-np-tab")
+      shadowEl.classList.remove("active-back-shadow")
+      document.querySelector("body").style.overflow = 'inherit'
+      document.querySelectorAll(".swiper").forEach(s => s.style.visibility = 'visible')
+    })
+  })
+  document.querySelectorAll(".np-tab-close").forEach(btn => btn.addEventListener("click", e => {
+    tabContents.forEach(content => {
+      content.classList.remove("active-np-tab")
+      shadowEl.classList.remove("active-back-shadow")
+      document.querySelector("body").style.overflow = 'inherit'
+      document.querySelectorAll(".swiper").forEach(s => s.style.visibility = 'visible')
+    })
+  }))
+</script>
+
+{% schema %}
+  {
+    "name": "New Product",
+    "templates": ["product"],
+    "settings": [],
+    "blocks": [
+      {
+        "type": "@app"
+      },
+      {
+        "type": "title",
+        "name": "Title",
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "block_mb",
+            "label": "Margin Bottom",
+            "default": true
+          }
+        ]
+      },
+      {
+        "type": "short-description",
+        "name": "Short Description",
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "block_mb",
+            "label": "Margin Bottom",
+            "default": true
+          },
+          {
+            "type": "color",
+            "id": "color",
+            "label": "Text Color",
+            "default": "#000000"
+          }
+        ]
+      },
+      {
+        "type": "price",
+        "name": "Price",
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "block_mb",
+            "label": "Margin Bottom",
+            "default": true
+          }
+        ]
+      },
+      {
+        "type": "product-form",
+        "name": "Product Form",
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "block_mb",
+            "label": "Margin Bottom",
+            "default": true
+          }
+        ]
+      },
+      {
+        "type": "product-variants",
+        "name": "Product Variants",
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "block_mb",
+            "label": "Margin Bottom",
+            "default": true
+          },
+          {
+            "type": "textarea",
+            "id": "option",
+            "label": "Variant Options",
+            "default": "Choose Your Flavour",
+            "info": "Each item seperate by comma like: Color,Style,Metal"
+          }
+        ]
+      },
+      {
+        "type": "description",
+        "name": "Description",
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "block_mb",
+            "label": "Margin Bottom",
+            "default": true
+          }
+        ]
+      },
+      {
+        "type": "icon",
+        "name": "Icon",
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "block_mb",
+            "label": "Margin Bottom",
+            "default": true
+          },
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": "Icon Image"
+          },
+          {
+            "type": "text",
+            "id": "text",
+            "label": "Text"
+          }
+        ]
+      },
+      {
+        "type": "tab",
+        "name": "Tab",
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "block_mb",
+            "label": "Margin Bottom",
+            "default": true
+          },
+          {
+            "type": "text",
+            "id": "heading",
+            "label": "Heading"
+          },
+          {
+            "type": "checkbox",
+            "id": "description",
+            "label": "Product Description",
+            "default": false
+          },
+          {
+            "type": "richtext",
+            "id": "richtext",
+            "label": "RichText"
+          },
+          {
+            "type": "page",
+            "id": "page",
+            "label": "Page"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "New Product"
+      }
+    ]
+  }
+{% endschema %}

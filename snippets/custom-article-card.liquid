@@ -1,0 +1,47 @@
+<style>
+
+  .cbp__item{
+    border-radius: 12.819px;
+    background: #F9F9F9;
+  }
+
+  .cbp__item-img{
+    font-size: 0;
+    line-height: 0;
+  }
+  .cbp__item-img img{
+    width: 100%;
+    height: 100%;
+    border-radius: 12.819px 12.819px 0px 0px;
+    object-fit: cover;
+  }
+  .cbp__item h4{
+    padding: 16px 12px;
+    color: var(--black, #000);
+    font-size: 20px;
+    line-height: 26px; /* 130% */
+    margin: 0;
+  }
+  
+  @media screen and (max-width: 768px){
+    .cbp__item h4{
+      padding: 16px 12px;
+      font-size: 12px;
+      line-height: 16px; /* 130% */
+    }
+  }
+</style>
+<a  class="blog-articles__article article{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}"
+          {% if settings.animations_reveal_on_scroll %}
+            data-cascade
+            style="--animation-order: {{ forloop.index }};"
+          {% endif %} href="{{ article.url }}">
+  <div class="cbp__item">
+    <div class="cbp__item-img">
+      {% if article.image %}
+        <img src="{{ article.image | img_url: "master" }}" alt="{{ article.title }}">
+      {% endif %}
+    </div>
+    <h4>{{ article.title | strip_html | truncatewords: 20, '...' }}</h4>
+  </div>
+</a>

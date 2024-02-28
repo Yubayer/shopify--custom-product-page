@@ -1,0 +1,22 @@
+#main-cart-footer .cart__footer {
+    padding-top: 0;
+}
+#main-cart-footer .totals{
+  justify-content: space-between;
+}
+#main-cart-footer .totals .totals__subtotal{
+  color: #000;
+  font-family: Gotham;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 20px; /* 125% */
+}
+#main-cart-footer .totals .totals__subtotal-value{
+  color: #000;
+  font-family: Gotham;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 20px; /* 125% */
+}

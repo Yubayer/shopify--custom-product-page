@@ -1,0 +1,282 @@
+<style>
+  .tts--{{ section.id }}{
+    margin-top: {{ section.settings.margin_top }}px;
+    margin-bottom: {{ section.settings.margin_bottom }}px;
+    overflow: hidden;
+  }
+  .tts__header{
+    text-align: center;
+    margin: 0 auto 32px;
+  }
+  .tts__header h2{
+    color: var(--black, #000);
+    font-size: 48px;
+    line-height: 56px; /* 116.667% */
+    margin: 0;
+  }
+  .tts__container--{{ section.id }} .swiper{
+    width: 100%;
+    overflow: visible;
+    margin: auto;
+  }
+  .tts__container--{{ section.id }} .swiper-slide{
+    border-radius: 12.819px;
+    border: 1.282px solid rgba(120, 192, 67, 0.15);
+    background: #F9F9F9;
+  }
+  .tts__container--{{ section.id }} .tts__item-wrapper{
+    padding: 40px 30px;
+  }
+  .tts__item-wrapper h4{
+    color: #000;
+    font-size: 24px;
+    line-height: 31.938px; /* 133.076% */
+    margin: 0 0 8px;
+  }
+  .tts__item-rating {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tts__rating-number{
+    color: var(--light, #C8C8C8);
+    font-size: 14.741px;
+    line-height: normal;
+  }
+  .tts__item-wrapper p{
+    color: var(--black, #000);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 22px; /* 137.5% */
+    margin: 16px 0 0;
+  }
+
+  @media screen and (min-width: 768px){
+    .tts-pagination{
+      display: none;
+    }
+  }
+  @media screen and (max-width: 768px){
+    .tts--{{ section.id }}{
+      margin-top: {{ section.settings.margin_top-m }}px;
+      margin-bottom: {{ section.settings.margin_bottom-m }}px;
+    }
+    .tts__header{
+      margin: 0 auto 16px;
+    }
+    .tts__header h2{
+      font-size: 24px;
+      line-height: 30px; /* 116.667% */
+    }
+    .tts__container--{{ section.id }} .tts__item-wrapper{
+      padding: 25px;
+    }
+    .iat__image img {
+      border-radius: 12px 12px 0px 0px !important;
+    }
+    .tts__item-wrapper h4{
+      font-size: 14px;
+      line-height: 20px; /* 133.076% */
+      margin: 0 0 6px;
+    }
+    .tts__rating-number{
+      font-size: 12px;
+    }
+    .tts__item-wrapper p{
+      font-size: 12px;
+      line-height: 18px; /* 137.5% */
+    }
+    .tts-pagination{
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      justify-content: center;
+      margin: 24px 0 0;
+    }
+    .tts-pagination .swiper-button-prev.tts-prev-{{ section.id }}{
+      position: relative;
+      width: unset;
+      height: unset;
+      margin: 0;
+      z-index: 1;
+      top: unset;
+      bottom: unset;
+      left: unset;
+      right: 0;
+    }
+    .tts-pagination .swiper-button-prev.tts-prev-{{ section.id }}:after{
+      content: none;
+    }
+    .tts-pagination .swiper-button-disabled{
+      color: #606060 !important;
+    }
+    .tts-pagination .swiper-button-next.tts-next-{{ section.id }}{
+      position: relative;
+      width: unset;
+      height: unset;
+      margin: 0;
+      z-index: 1;
+      top: unset;
+      bottom: unset;
+      left: unset;
+      right: 0;
+    }
+    .tts-pagination .swiper-button-next.tts-next-{{ section.id }}:after{
+      content: none;
+    }
+  }
+</style>
+<section class="tts--{{ section.id }}">
+  <div class="tts__wrapper page-width">
+    <div class="tts__header">
+      <h2>{{ section.settings.title }}</h2>
+    </div>
+    <div class="tts__container--{{ section.id }}">
+      <div class="swiper">
+        <div class="swiper-wrapper">
+          {% for block in section.blocks %}
+            <div class="swiper-slide">
+              <div class="tts__item-wrapper">
+                <h4>{{ block.settings.title }}</h4>
+                <div class="tts__item-rating">
+                  {% for i in (1..block.settings.number) %}
+                    {% render "all-icons", name: "star" %}
+                  {% endfor %}
+                  <span class="tts__rating-number">
+                    ({{ block.settings.number }})
+                  </span>
+                </div>
+                <p>{{ block.settings.text }}</p>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      
+      <div class="tts-pagination">
+        <div class="swiper-button-prev tts-prev-{{ section.id }}">
+          {% render "all-icons", name: "prev__btn" %}
+        </div>
+        <div class="swiper-button-next tts-next-{{ section.id }}">
+          {% render "all-icons", name: "next__btn" %}
+        </div>
+      </div>
+              
+    </div>
+  </div>
+</section>
+
+
+<script>
+  new Swiper(".tts__container--{{ section.id }} .swiper", {
+    slidesPerView: 1.1,
+    spaceBetween: 24,
+    centeredSlides: false,
+    loop: false,
+    navigation: {
+      nextEl: ".tts-next-{{ section.id }}",
+      prevEl: ".tts-prev-{{ section.id }}",
+    },
+    breakpoints: {
+      768: {
+        slidesPerView: 1.7,
+        spaceBetween: 30,
+      },
+      1020: {
+        slidesPerView: 2.5,
+        spaceBetween: 24,
+      }
+    },
+  })
+</script>
+
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title",
+      "default": "LATEST REVIEWS"
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "margin_top",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin Top",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin Bottom",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "margin_top-m",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin Top (Mobile)",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "margin_bottom-m",
+      "min": 0,
+      "max": 200,
+      "step": 4,
+      "unit": "px",
+      "label": "Margin Bottom (Mobile)",
+      "default": 16
+    }
+  ],
+  "blocks": [
+     {
+       "name": "Item",
+       "type": "item",
+       "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Samie Deo"
+          },
+          {
+            "type": "number",
+            "id": "number",
+            "label": "Rating",
+            "default": 5
+          },
+          {
+            "type": "textarea",
+            "id": "text",
+            "label": "Text",
+            "default": "The vape's aesthetics are top-notch. Its slim and stylish build not only looks sophisticated but also feels comfortable to hold. The attention to detail in its craftsmanship is truly commendable."
+          }
+
+       ]
+     }
+   ],
+  "presets": [
+    {
+      "name": "Testimonials"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,8 @@
+<div class="new_price-wrapper">
+  {% if product.selected_or_first_available_variant.price < product.selected_or_first_available_variant.compare_at_price %}
+    <h3 class="new_regular-price">{{ product.selected_or_first_available_variant.price | money}}</h3>
+    <h3 class="new_compare-price">{{ product.selected_or_first_available_variant.compare_at_price | money}}</h3>
+  {% else %}
+    <h3 class="new_regular-price">{{ product.selected_or_first_available_variant.price | money}}</h3>
+  {% endif %}
+</div>

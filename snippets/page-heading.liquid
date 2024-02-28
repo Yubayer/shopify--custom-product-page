@@ -1,0 +1,59 @@
+{% assign value = section.settings %}
+
+<style>
+  .section--{{ section.id }}{
+    margin-top: {{ section.settings.margin_top }}px;
+    margin-bottom: {{ section.settings.margin_bottom }}px;
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    
+    color: {{ value.color }};
+    background-color: {{ value.bg_color }};
+  }
+  .cj_ph_wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+  .cj_ph_wrapper *{
+    text-align: center;
+  }
+  .cj_ph_wrapper h3{
+    margin: 0;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 56px;
+  }
+
+  .cj_ph_wrapper div *,
+  .cj_ph_wrapper div{
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    margin: 0;
+  }
+
+  @media all and (max-width: 768px){
+    .section--{{ section.id }}{
+      margin-top: {{ section.settings.margin_top-m }}px;
+      margin-bottom: {{ section.settings.margin_bottom-m }}px;
+      padding-top: {{ section.settings.padding_top-m }}px;
+      padding-bottom: {{ section.settings.padding_bottom-m }}px;
+    }
+    .cj_ph_wrapper{
+      gap: 16px;
+    }
+    .cj_ph_wrapper h3{
+      font-size: 24px;
+      line-height: 30px;
+    }
+    .cj_ph_wrapper div *,
+    .cj_ph_wrapper div{
+      font-size: 12px;
+      line-height: 18px;
+    }
+  }
+</style>

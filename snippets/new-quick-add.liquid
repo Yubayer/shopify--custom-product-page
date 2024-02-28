@@ -1,0 +1,13 @@
+
+<quickadd-el>
+  <div class="nqa-wrapper">
+    {% if product.has_only_default_variant %}
+      {% form 'product', product %}
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        <button class="nqa-button" type="submit">{% render 'icon-plus-new' %}</button>
+      {% endform %}
+    {% else %}
+      <a href="{{ product.url }}" class="nqa-button" type="button">{% render 'icon-plus-new' %}</a>
+    {% endif %}
+  </div>
+</quickadd-el>

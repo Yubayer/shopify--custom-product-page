@@ -1,0 +1,385 @@
+
+{{ 'component-loading-overlay.css' | asset_url | stylesheet_tag }}
+{{ 'component-card.css' | asset_url | stylesheet_tag }}
+{{ 'component-price.css' | asset_url | stylesheet_tag }}
+
+<style>
+  .nbcw-{{ section.id }}{
+    margin-top: {{ section.settings.margin_top }}px;
+    margin-bottom: {{ section.settings.margin_bottom }}px;
+  }
+  .new-collection-slider{
+    /* margin-top: 50px; */
+    max-width: 100vw;
+    overflow: hidden;
+  }
+  .nbcw-{{ section.id }} .nbcs-header {
+    display: grid;
+    grid-template-columns: auto 130px;
+    align-items: center;
+  }
+  .nbcw-{{ section.id }} .nbcs-pagination {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .nbcw-{{ section.id }} .nbcs-pagination div:empty{
+    display: block ;
+  }
+  .nbcw-{{ section.id }} .nbcs-pagination div{
+    position: inherit;
+    width: 48px;
+    height: 48px;
+    margin-top: inherit;
+  }
+  .nbcw-{{ section.id }} .nbcs-pagination div:after{
+    content: inherit;
+  }
+  .nbcw-{{ section.id }} .grid{
+    column-gap: inherit;
+    row-gap: inherit;
+    flex-wrap: nowrap;
+    margin-top: 37px;
+  }
+  .nbcw-{{ section.id }} .grid__item {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .nbcw-{{ section.id }} .nbcs-section-title{
+    color: #000;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 56px;
+    margin: 0;
+  }
+  .nbcsSwiper_{{ section.id }} .swiper-slide{
+    height: unset;
+  }
+
+  @media(max-width: 768px) {
+    .nbcw-{{ section.id }}{
+      margin-top: {{ section.settings.margin_top-m }}px;
+      margin-bottom: {{ section.settings.margin_bottom-m }}px;
+    }
+    .nbcw-{{ section.id }} .nbcsSwiper{
+      padding-bottom: 48px;
+      overflow: visible;
+      position: relative;
+    }
+    .nbcw-{{ section.id }} .nbcs-header {
+      display: grid;
+      grid-template-columns: 1fr;
+      align-items: center;
+      justify-items: center;
+    }
+    .nbcw-{{ section.id }} .nbcs-section-title {
+      font-size: 24px;
+      line-height: 30px;
+      margin-bottom: 16px;
+    }
+    .nbcw-{{ section.id }} .grid{
+      margin-top: 0px;
+    }
+    .nbcsSwiper_{{ section.id }} .nbcs-pagination{
+      position: absolute;
+      width: 48px;
+      height: 48px;
+      margin-top: inherit;
+      bottom: 0;
+      top: inherit;
+    }
+    .nbcsSwiper_{{ section.id }} .nbcs-pagination div{
+      position: relative;
+      width: 48px;
+      height: 48px;
+      margin-top: inherit;
+      bottom: 0;
+      top: inherit;
+      transform: translateX(-50%);
+      right: unset;
+      left: unset;
+    }
+    .nbcsSwiper_{{ section.id }} .nbcs-pagination .nbcs-prev{
+      left: calc(50% - 30px);
+    }
+    .nbcsSwiper_{{ section.id }} .nbcs-pagination .nbcs-next{
+      left: calc(50% + 30px);
+    }
+    .nbcsSwiper_{{ section.id }}{
+      padding-bottom: 55px;
+    }
+  }
+</style>
+
+
+  <div id="rpSwiper" class="nbcw-{{ section.id }} {% unless section.settings.full_width %}page-width{% endunless %}">
+    <recommendations-el data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit=8">
+    {% if recommendations.performed and recommendations.products_count > 0 %}
+      <div class="swiper nbcsSwiper_{{ section.id }}" id="">
+        <div class="nbcs-header">
+          <h2 class="nbcs-section-title">{{ section.settings.section_title }}</h2>
+          <div class="nbcs-pagination">
+            <div class="swiper-button-prev nbcs-prev-{{ section.id }}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="49" viewBox="0 0 48 49" fill="none">
+                <rect x="-0.5" y="0.5" width="47" height="47" rx="5.5" transform="matrix(-1 0 0 1 47 0.863281)" stroke="#78C043"/>
+                <path d="M14.1464 25.2168C13.9512 25.0216 13.9512 24.705 14.1464 24.5097L17.3284 21.3277C17.5237 21.1325 17.8403 21.1325 18.0355 21.3277C18.2308 21.523 18.2308 21.8396 18.0355 22.0349L15.2071 24.8633L18.0355 27.6917C18.2308 27.887 18.2308 28.2036 18.0355 28.3988C17.8403 28.5941 17.5237 28.5941 17.3284 28.3988L14.1464 25.2168ZM34 25.3633H14.5V24.3633H34V25.3633Z" fill="#78C043"/>
+              </svg>
+            </div>
+            <div class="swiper-button-next nbcs-next-{{ section.id }}">
+              <svg xmlns="http://www.w3.org/2000/svg" width="48" height="49" viewBox="0 0 48 49" fill="none">
+                <rect x="0.5" y="1.36328" width="47" height="47" rx="5.5" stroke="#78C043"/>
+                <path d="M33.8536 25.2168C34.0488 25.0216 34.0488 24.705 33.8536 24.5097L30.6716 21.3277C30.4763 21.1325 30.1597 21.1325 29.9645 21.3277C29.7692 21.523 29.7692 21.8396 29.9645 22.0349L32.7929 24.8633L29.9645 27.6917C29.7692 27.887 29.7692 28.2036 29.9645 28.3988C30.1597 28.5941 30.4763 28.5941 30.6716 28.3988L33.8536 25.2168ZM14 25.3633H33.5V24.3633H14V25.3633Z" fill="#78C043"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <ul class="swiper-wrapper grid" id="product-grid">
+            {% for product in recommendations.products %}
+              {% assign lazy_load = false %}
+              {%- if forloop.index > 2 -%}
+                {%- assign lazy_load = true -%}
+              {%- endif -%}
+              
+                <li class="swiper-slide grid__item">
+                  {% render 'card-product',
+                    card_product: product,
+                    media_aspect_ratio: section.settings.image_ratio,
+                    image_shape: section.settings.image_shape,
+                    show_secondary_image: section.settings.show_secondary_image,
+                    show_vendor: section.settings.show_vendor,
+                    show_rating: section.settings.show_rating,
+                    lazy_load: lazy_load,
+                    show_quick_add: section.settings.enable_quick_add,
+                    section_id: section.id
+                  %}
+                </li>
+           
+            {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+    </recommendations-el>
+  </div>
+
+  <script>
+    class RecomProd{
+      constructor() {
+        this.renderPage()
+      }
+
+      renderPage() {
+        let url = `{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit=8`
+        fetch(url)
+        .then(res => res.text())
+        .then(res => {
+          let html = new DOMParser().parseFromString(res, 'text/html');
+          document.querySelector("#rpSwiper").innerHTML = html.querySelector("#rpSwiper").innerHTML
+        })
+        .catch(err => console.log(err))
+        .finally(res => {
+          new Swiper(".nbcsSwiper_{{ section.id }}", {
+            slidesPerView: 4,
+            spaceBetween: 15,
+            navigation: {
+              nextEl: ".nbcs-next-{{ section.id }}",
+              prevEl: ".nbcs-prev-{{ section.id }}",
+            },
+            breakpoints: {
+              // when window width is >= 320px
+              320: {
+                slidesPerView: 1.4,
+                spaceBetween: 10
+              },
+              // when window width is >= 480px
+              480: {
+                slidesPerView: 1.5,
+                spaceBetween: 20
+              },
+              // when window width is >= 640px
+              640: {
+                slidesPerView: 2.5,
+                spaceBetween: 20
+              },
+              1200: {
+                slidesPerView: 4,
+                spaceBetween: 20
+              }
+            }
+          })
+        })
+      }
+    }
+
+    new RecomProd()
+  </script>
+
+
+{% schema %}
+  {
+    "name": "Recomendation Product",
+    "class": "new-collection-slider",
+    "templates": ["product"],
+    "settings": [
+      {
+        "type": "text",
+        "id": "section_title",
+        "label": "Section Titgle",
+        "default": "BEST SELLERS"
+      },
+      {
+        "type": "checkbox",
+        "id": "full_width",
+        "label": "Full Width Section",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "t:sections.main-collection-product-grid.settings.header__3.content"
+      },
+      {
+        "type": "select",
+        "id": "image_ratio",
+        "options": [
+          {
+            "value": "adapt",
+            "label": "t:sections.main-collection-product-grid.settings.image_ratio.options__1.label"
+          },
+          {
+            "value": "portrait",
+            "label": "t:sections.main-collection-product-grid.settings.image_ratio.options__2.label"
+          },
+          {
+            "value": "square",
+            "label": "t:sections.main-collection-product-grid.settings.image_ratio.options__3.label"
+          }
+        ],
+        "default": "adapt",
+        "label": "t:sections.main-collection-product-grid.settings.image_ratio.label"
+      },
+      {
+        "type": "select",
+        "id": "image_shape",
+        "options": [
+          {
+            "value": "default",
+            "label": "t:sections.all.image_shape.options__1.label"
+          },
+          {
+            "value": "arch",
+            "label": "t:sections.all.image_shape.options__2.label"
+          },
+          {
+            "value": "blob",
+            "label": "t:sections.all.image_shape.options__3.label"
+          },
+          {
+            "value": "chevronleft",
+            "label": "t:sections.all.image_shape.options__4.label"
+          },
+          {
+            "value": "chevronright",
+            "label": "t:sections.all.image_shape.options__5.label"
+          },
+          {
+            "value": "diamond",
+            "label": "t:sections.all.image_shape.options__6.label"
+          },
+          {
+            "value": "parallelogram",
+            "label": "t:sections.all.image_shape.options__7.label"
+          },
+          {
+            "value": "round",
+            "label": "t:sections.all.image_shape.options__8.label"
+          }
+        ],
+        "default": "default",
+        "label": "t:sections.all.image_shape.label",
+        "info": "t:sections.all.image_shape.info"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_secondary_image",
+        "default": false,
+        "label": "t:sections.main-collection-product-grid.settings.show_secondary_image.label"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_vendor",
+        "default": false,
+        "label": "t:sections.main-collection-product-grid.settings.show_vendor.label"
+      },
+      {
+        "type": "checkbox",
+        "id": "show_rating",
+        "default": false,
+        "label": "t:sections.main-collection-product-grid.settings.show_rating.label",
+        "info": "t:sections.main-collection-product-grid.settings.show_rating.info"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_quick_add",
+        "default": false,
+        "label": "t:sections.main-collection-product-grid.settings.enable_quick_buy.label"
+      },
+      {
+        "type": "header",
+        "content": "Spacing"
+      },
+      {
+        "type": "range",
+        "id": "margin_top",
+        "min": 0,
+        "max": 200,
+        "step": 4,
+        "unit": "px",
+        "label": "Margin Top",
+        "default": 16
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom",
+        "min": 0,
+        "max": 200,
+        "step": 4,
+        "unit": "px",
+        "label": "Margin Bottom",
+        "default": 16
+      },
+      {
+        "type": "range",
+        "id": "margin_top-m",
+        "min": 0,
+        "max": 200,
+        "step": 4,
+        "unit": "px",
+        "label": "Margin Top (Mobile)",
+        "default": 16
+      },
+      {
+        "type": "range",
+        "id": "margin_bottom-m",
+        "min": 0,
+        "max": 200,
+        "step": 4,
+        "unit": "px",
+        "label": "Margin Bottom (Mobile)",
+        "default": 16
+      }
+    ],
+    "blocks": [],
+    "presets": [
+      {
+        "name": "Recomendation Product"
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}
